@@ -1,0 +1,40 @@
+local addons = {}
+
+addons.placeid = 4832438542
+
+addons.init = function(GameTab)
+	local _1 = false
+	local player = game.Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local pinchRemote = ReplicatedStorage.COM.Pinch.LetMeGo
+
+function onchar()
+	if char:GetAttribute("Grabbed") and _1 then
+		pinchRemote:FireServer()
+	end
+end
+
+char:GetAttributeChangedSignal("Grabbed"):Connect(function()
+	if char:GetAttribute("Grabbed") and _1 then
+		pinchRemote:FireServer()
+	end
+end)
+end
+onchar()
+player.CharacterAdded:Connect(function(chara)
+	char = chara
+	onchar()
+end)
+	local tab = GameTab:CreateToggle({
+   Name = "Toggle Example",
+   CurrentValue = false,
+   Flag = tostring(addons.placeid).."/anitgrab",
+   Callback = function(Value)
+	_1 = Value
+   end,
+})
+end
+
+return addons
