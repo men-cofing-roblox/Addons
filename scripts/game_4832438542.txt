@@ -2,7 +2,7 @@ local addons = {}
 
 addons.placeid = 4832438542
 
-addons.init = function(GameTab)
+local load = function(GameTab)
 	local _1 = false
 	local player = game.Players.LocalPlayer
 local char = player.Character or player.CharacterAdded:Wait()
@@ -36,5 +36,7 @@ end)
    end,
 })
 end
+
+addons.Load = load
 
 return addons
