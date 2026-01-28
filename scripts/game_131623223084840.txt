@@ -1,0 +1,73 @@
+local addons = {}
+
+local function load(Tab)
+	local base = nil
+	local _1 = false
+	local _2 = false
+	for k, v in pairs(workspace.Bases:GetChildren()) do
+		if v:GetAttribute("Holder") == game:GetService("Players").LocalPlayer.UserId then
+			base = v
+			break
+		end
+	end
+	Tab:CreateToggle({
+		Name = "Auto Collect Brainrot Money (only work if you close to brainrot)",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/AutoCollectBrainrotMoney", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			_1 = Value
+		end,
+	})
+	Tab:CreateToggle({
+		Name = "Auto Collect Brainrot TP (need on Auto Collect Brainrot Money)",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/AutoCollectBrainrotMoneyTP", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			_2 = Value
+		end,
+	})
+Tab:CreateInput({
+   Name = "add local speed (if you change then you cant upgrade you need to original speed)",
+   CurrentValue = "0",
+   PlaceholderText = "0",
+   RemoveTextAfterFocusLost = true,
+   Flag = tostring(game.PlaceId) .. "/AddSpeed",
+   Callback = function(Text)
+   local success, message = pcall(function() return tonumber(Text) end)
+   if success then
+	   game:GetService("Players").LocalPlayer:SetAttribute("CurrentSpeed",game:GetService("Players").LocalPlayer:GetAttribute("CurrentSpeed") + message)
+   end
+   end,
+})
+Tab:CreateButton({
+   Name = "Delete Vip and Vip + on Touch show gamepass",
+   Callback = function()
+   for k, v in pairs(workspace.VIPWalls:GetDescendants()) do
+	   if v.Name == "TouchInterest" then
+		   v:Destroy()
+	   end
+   end
+   end,
+})
+	while true do
+		while not _1 do
+			wait()
+		end
+		for k, v in pairs(base:GetChildren()) do
+			local number = tonumber(v.Name:match("%d+"))
+
+			if number and #v:GetChildren() >= 2 then
+				if _2 and game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+					game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Root.CFrame*CFrame.new(0,7,-6)
+				end
+   	 			game:GetService("ReplicatedStorage").Packages.Net["RF/Plot.PlotAction"]:InvokeServer("Collect Money", base.Name, tostring(number))
+				task.wait(0.5)
+			end
+		end
+		wait()
+	end
+end
+
+addons.Load = load
+return addons
+--addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
