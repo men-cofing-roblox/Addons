@@ -2,7 +2,7 @@ local addons = getgenv().Addons_4832438542
 
 addons.placeid = 4832438542
 
-local load = function(GameTab)
+local load = function(GameID,Library)
 	local _1 = false
 	local player = game.Players.LocalPlayer
 local char = player.Character or player.CharacterAdded:Wait()
