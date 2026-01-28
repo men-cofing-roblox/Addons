@@ -1,46 +1,40 @@
+local addons = {}
 
-local game, workspace = game, workspace
-local getrawmetatable, getmetatable, setmetatable, pcall, getgenv, next, tick = getrawmetatable, getmetatable, setmetatable, pcall, getgenv, next, tick
-local Vector2new, Vector3zero, CFramenew, Color3fromRGB, Color3fromHSV, Drawingnew, TweenInfonew = Vector2.new, Vector3.zero, CFrame.new, Color3.fromRGB, Color3.fromHSV, Drawing.new, TweenInfo.new
-local getupvalue, mousemoverel, tablefind, tableremove, stringlower, stringsub, mathclamp = debug.getupvalue, mousemoverel or (Input and Input.MouseMove), table.find, table.remove, string.lower, string.sub, math.clamp
-
-
-local addons = getgenv().addons_4832438542
-
-local load = function(GameID,Library)
+local function load(Tab)
 	local _1 = false
-	local player = game.Players.LocalPlayer
-local char = player.Character or player.CharacterAdded:Wait()
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local pinchRemote = ReplicatedStorage.COM.Pinch.LetMeGo
+	local Players = game:GetService("Players")
+	local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local function onchar()
-	if char:GetAttribute("Grabbed") and _1 then
-		pinchRemote:FireServer()
+	local player = Players.LocalPlayer
+	local pinchRemote = ReplicatedStorage.COM.Pinch.LetMeGo
+
+	local function setupCharacter(char)
+		local function onchar()
+			if char:GetAttribute("Grabbed") and _1 then
+				pinchRemote:FireServer()
+			end
+		end
+
+		char:GetAttributeChangedSignal("Grabbed"):Connect(onchar)
+		onchar()
 	end
-end
 
-char:GetAttributeChangedSignal("Grabbed"):Connect(function()
-	if char:GetAttribute("Grabbed") and _1 then
-		pinchRemote:FireServer()
+	if player.Character then
+		setupCharacter(player.Character)
 	end
-end)
-end
-onchar()
-player.CharacterAdded:Connect(function(chara)
-	char = chara
-	onchar()
-end)
-	Library.CreateToggle(GameID,{
-   ["Name"] = "anit grab",
-   ["CurrentValue"] = false,
-   ["Callback"] = function(Value)
-	_1 = Value
-   end,
-})
+
+	player.CharacterAdded:Connect(setupCharacter)
+	
+	Tab:CreateToggle({
+		Name = "Anti Grab",
+		CurrentValue = false,
+		Flag = "00000/AntiGrab", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			_1 = Value
+		end,
+	})
 end
 
 addons.Load = load
-
 return addons
