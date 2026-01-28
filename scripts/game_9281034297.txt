@@ -1,0 +1,39 @@
+local addons = {}
+
+local function load(Tab)
+	local _1 = false
+	local _2 = 100
+	Tab:CreateToggle({
+		Name = "Auto Ball Shoot",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/BallShoot", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			_1 = Value
+		end,
+	})
+	Tab:CreateSlider({
+   Name = "Accurate BallShoot",
+   Range = {0, 100},
+   Increment = 1,
+   Suffix = "%",
+   CurrentValue = 100,
+   Flag = tostring(game.PlaceId) .. "/AccurateBallShoot", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+	_2 = Value
+   end,
+})
+	while true do
+		while not _1 do
+			wait()
+		end
+		local ball = game:GetService("ReplicatedStorage").Remote.RemoteFunction:InvokeServer("Throw", _2/100)
+		while ball.Parent do
+			wait()
+		end
+		task.wait(0.1)
+	end
+end
+
+addons.Load = load
+return addons
+--addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
