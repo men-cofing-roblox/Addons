@@ -1,6 +1,4 @@
-local addons = getgenv().Addons_4832438542
-
-addons.placeid = 4832438542
+local addons = {}
 
 local load = function(GameID,Library)
 	local _1 = false
@@ -27,11 +25,10 @@ player.CharacterAdded:Connect(function(chara)
 	char = chara
 	onchar()
 end)
-	local tab = GameTab:CreateToggle({
-   Name = "Toggle Example",
-   CurrentValue = false,
-   Flag = tostring(addons.placeid).."/anitgrab",
-   Callback = function(Value)
+	Library.CreateToggle(GameID,{
+   ["Name"] = "anit grab",
+   ["CurrentValue"] = false,
+   ["Callback"] = function(Value)
 	_1 = Value
    end,
 })
