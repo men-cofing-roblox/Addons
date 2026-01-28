@@ -1,0 +1,79 @@
+local addons = {}
+
+local function load(Tab)
+	local _1 = false
+	local _2 = false
+	local _3 = false
+	local base = nil
+	for k, v in pairs(workspace.Plots:GetChildren()) do
+		if v:GetAttribute("Plr") == game:GetService("Players").LocalPlayer.Name then
+			base = v
+			break
+		end
+	end
+	Tab:CreateToggle({
+		Name = "Auto Tap",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/AutoTap", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			_1 = Value
+		end,
+	})
+	Tab:CreateToggle({
+		Name = "Auto Swing (work only if you equip axe and is close to tree)",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/AutoSwing", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			_2 = Value
+		end,
+	})
+	Tab:CreateToggle({
+		Name = "Auto Collect Coins",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/AutoCollectCoins", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			_3 = Value
+		end,
+	})
+	task.spawn(function()
+		while true do
+			while not _1 do
+				wait()
+			end
+			game:GetService("ReplicatedStorage").Remotes.TapButtonClick:FireServer(base)
+			task.wait(0.025)
+		end
+	end)
+	task.spawn(function()
+		while true do
+			while not _2 do
+				wait()
+			end
+			game:GetService("ReplicatedStorage").Remotes.AxeSwing:FireServer()
+			task.wait(0.025)
+		end
+	end)
+	task.spawn(function()
+		while true do
+			while not _3 do
+				wait()
+			end
+			if _3 then
+				for k, v in pairs(workspace.Orbs:GetChildren()) do
+				if v.Name == "Coin" then
+					game:GetService("ReplicatedStorage").Remotes.CollectCoin:FireServer("Coin", v:GetAttribute("CoinReward"))
+					if v then
+						v:Destroy()
+					end
+					wait(0.05)
+				end
+			end
+			wait()
+			end
+		end
+	end)
+end
+
+addons.Load = load
+return addons
+--addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
