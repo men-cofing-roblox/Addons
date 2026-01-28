@@ -1,4 +1,4 @@
-local addons = {}
+local addons = getgenv().Addons_4832438542
 
 addons.placeid = 4832438542
 
