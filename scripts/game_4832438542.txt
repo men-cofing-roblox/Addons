@@ -8,7 +8,7 @@ local char = player.Character or player.CharacterAdded:Wait()
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local pinchRemote = ReplicatedStorage.COM.Pinch.LetMeGo
 
-function onchar()
+local function onchar()
 	if char:GetAttribute("Grabbed") and _1 then
 		pinchRemote:FireServer()
 	end
