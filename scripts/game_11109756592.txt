@@ -1,0 +1,42 @@
+local addons = {}
+
+local function load(Tab)
+	local _1 = false
+	game:GetService("ReplicatedStorage").Remotes.Events.ThumbnailStart:FireServer()
+	
+	Tab:CreateToggle({
+		Name = "Auto Thumbnail Maker",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/AutoThumbnailMaker", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			_1 = Value
+		end,
+	})
+	while true do
+		while not _1 do
+			wait()
+		end
+		game:GetService("ReplicatedStorage").Remotes.Events.ThumbnailStart:FireServer()
+		task.wait(4)
+		local ohTable1 = {
+			["Color"] = math.random(0, 1000)/1000,
+			["Pic"] = math.random(1, 7),
+			["Pose"] = math.random(1, 5),
+			["Arrow"] = math.random(1, 4)
+		}
+		local letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZqwertyuiopasdfghjklzxcvbnm1234567890!@#$%^&*()[]{};:,<>.?"
+		local maxLetters = 16
+		local randomString = ""
+
+		for i = 1, maxLetters do
+		    local index = math.random(1, #letters)
+		    randomString = randomString .. letters:sub(index, index)
+		end
+		game:GetService("ReplicatedStorage").Remotes.Events.ThumbnailEnd:FireServer(ohTable1, randomString)
+		task.wait()
+	end
+end
+
+addons.Load = load
+return addons
+--addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
