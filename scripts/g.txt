@@ -22,11 +22,12 @@ player.CharacterAdded:Connect(function(chara)
 	char = chara
 	onchar()
 end)
-	gametab:CreateToggle({
-   Name = "anit grab",
-   CurrentValue = false,
-   Flag = "4832438542/anitgrab", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Value)
-   _1 = Value
-   end,
-})
+	table.insert(gametab, {
+		["Type"] = "CreateToggle",
+		["Name"] = "text",
+		["CurrentValue"] = false,
+		["Flag"] = "grg",
+		["Callback"] = function(Value)
+			_1 = Value
+		end,
+	})
