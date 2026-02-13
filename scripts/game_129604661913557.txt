@@ -1,103 +1,166 @@
 local addons = {}
 
+
 local function load(Tab)
-    local autocollect = false
-    local fastrespawn = false
-    local afterrespawntp = false
-    local tppos = "0,0,0"
-    Tab:CreateToggle({
-        Name = "Auto Collect",
-        CurrentValue = false,
-        Flag = tostring(game.PlaceId) .. "/AutoCollect",
-        Callback = function(Value)
-            autocollect = Value
-        end,
-    })
-    Tab:CreateToggle({
-        Name = "Fast Respawn (can be bannable)",
-        CurrentValue = false,
-        Flag = tostring(game.PlaceId) .. "/FastRespawn",
-        Callback = function(Value)
-            fastrespawn = Value
-        end,
-    })
-    Tab:CreateToggle({
-        Name = "after respawn tp",
-        CurrentValue = false,
-        Flag = tostring(game.PlaceId) .. "/afterrespawntp",
-        Callback = function(Value)
-            afterrespawntp = Value
-        end,
-    })
-    local Input = Tab:CreateInput({
+	local timer = 0
+	local autocollect = false
+	local fastrespawn = false
+	local afterrespawntp = false
+	local autojoinonhopserver = false
+	local autohopserver = false
+	local waitminforhopserver = 2
+	game:GetService("RunService").RenderStepped:Connect(function(dt)
+		timer = timer + dt
+		if autohopserver then
+			if timer >= waitminforhopserver*60 then
+    			local success, response = pcall(function()
+        			return game:GetService("HttpService"):JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/129604661913557/servers/Public?sortOrder=Asc&limit=100"))
+    			end)
+    			if not success or not response.data then
+					timer = 0
+        			return
+    			end
+    			availableServers = {}
+    			for _, server in ipairs(response.data) do
+    			    if server.id ~= game.JobId and server.playing < server.maxPlayers then
+    			        table.insert(availableServers, server.id)
+    			    end
+    			end
+    			if #availableServers == 0 then
+    			    game:GetService("TeleportService"):Teleport(129604661913557, game:GetService("Players").LocalPlayer)
+					timer = 0
+    			    return
+    			end
+    			game:GetService("TeleportService"):TeleportToPlaceInstance(129604661913557, availableServers[math.random(1, #availableServers)], game:GetService("Players").LocalPlayer)
+				timer = 0
+			end
+		else
+			timer = 0
+		end
+	end)
+	if not game:GetService("Players").LocalPlayer:GetAttribute("EnvironmentID") then
+	task.spawn(function()
+		wait(6)
+		if autojoinonhopserver then
+			game:GetService("ReplicatedStorage").Remotes.Arcade.Join:FireServer()
+		end
+	end)
+end
+	local tppos = "2325,4365,1154"
+	Tab:CreateToggle({
+		Name = "Auto Collect",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/AutoCollect",
+		Callback = function(Value)
+			autocollect = Value
+		end,
+	})
+	Tab:CreateToggle({
+		Name = "Fast Respawn (can be bannable)",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/FastRespawn",
+		Callback = function(Value)
+			fastrespawn = Value
+		end,
+	})
+	Tab:CreateToggle({
+		Name = "Auto Join On Hop Server (can be bannable)",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/AutoJoinOnHopServer",
+		Callback = function(Value)
+			autojoinonhopserver = Value
+		end,
+	})
+	
+	Tab:CreateToggle({
+		Name = "after respawn tp",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/afterrespawntp",
+		Callback = function(Value)
+			afterrespawntp = Value
+		end,
+	})
+	local Input = Tab:CreateInput({
    Name = "tp pos",
-   CurrentValue = "0,0,0",
+   CurrentValue = "2325,4365,1154",
    PlaceholderText = "0,0,0",
    RemoveTextAfterFocusLost = false,
-   Flag = "tppos",
+   Flag = tostring(game.PlaceId) .. "/tppos",
    Callback = function(Text)
-        tppos = Text
+		tppos = Text
    end,
 })
+
 Tab:CreateButton({
    Name = "set tp pos to body pos",
    Callback = function()
-        local cf = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame
-        Input:Set(math.floor(cf.Position.X) .. "," .. math.floor(cf.Position.Y) .. "," .. math.floor(cf.Position.Z))
-        tppos = math.floor(cf.Position.X) .. "," .. math.floor(cf.Position.Y) .. "," .. math.floor(cf.Position.Z)
+		local cf = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame
+		Input:Set(math.floor(cf.Position.X) .. "," .. math.floor(cf.Position.Y) .. "," .. math.floor(cf.Position.Z))
+		tppos = math.floor(cf.Position.X) .. "," .. math.floor(cf.Position.Y) .. "," .. math.floor(cf.Position.Z)
    end,
 })
-    task.spawn(function()
-        while wait() do
-            if autocollect then
-            for i, v in ipairs(game:GetService("Workspace"):GetChildren()) do
-                if v.Name == "_drop" then
-                    pcall(function()
-                        firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, v, 0)
-                    end)
-                    pcall(function()
-                        firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, v, 1)
-                    end)
-                end
-            end
-            end
-        end
-    end)
-    pcall(function()
-        game:GetService("Players").LocalPlayer.Character.Humanoid.Died:Connect(function()
-        task.spawn(function()
-            if afterrespawntp then
-                wait(0.5)
-            local humanoidrootpart = character:WaitForChild("HumanoidRootPart")
-            local x, y, z = tppos:match("([^,]+),([^,]+),([^,]+)")
-            x, y, z = tonumber(x), tonumber(y), tonumber(z)
-            local cf = CFrame.new(x, y, z)
-            humanoidrootpart.CFrame = cf
-            end
-        end)
-            if fastrespawn then
-                wait(0.5)
-                game:GetService("ReplicatedStorage").Remotes.Duels.RespawnNow:FireServer()
-            end
-        end)
-    end)
-    game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function(character)
+Tab:CreateToggle({
+		Name = "Auto Hop Server",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/AutoHopServer",
+		Callback = function(Value)
+			autohopserver = Value
+		end,
+	})
+	Tab:CreateSlider({
+   Name = "Wait Minute For Hop Server",
+   Range = {1, 30},
+   Increment = 1,
+   Suffix = "M",
+   CurrentValue = 2,
+   Flag = tostring(game.PlaceId) .. "/WaitMinuteForHopServer",
+   Callback = function(Value)
+	waitminforhopserver = Value
+   end,
+})
+
+
+	task.spawn(function()
+		while wait() do
+			if autocollect then
+			for i, v in ipairs(game:GetService("Workspace"):GetChildren()) do
+				if v.Name == "_drop" then
+					pcall(function()
+						firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, v, 0)
+					end)
+					pcall(function()
+						firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, v, 1)
+					end)
+				end
+			end
+			end
+		end
+	end)
+	pcall(function()
+		game:GetService("Players").LocalPlayer.Character.Humanoid.Died:Connect(function()
+			if fastrespawn then
+				wait(0.5)
+				game:GetService("ReplicatedStorage").Remotes.Duels.RespawnNow:FireServer()
+			end
+		end)
+	end)
+	game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function(character)
         local humanoid = character:WaitForChild("Humanoid")
-        task.spawn(function()
-            if afterrespawntp then
-                wait(0.5)
-            local humanoidrootpart = character:WaitForChild("HumanoidRootPart")
-            local x, y, z = tppos:match("([^,]+),([^,]+),([^,]+)")
-            x, y, z = tonumber(x), tonumber(y), tonumber(z)
-            local cf = CFrame.new(x, y, z)
-            humanoidrootpart.CFrame = cf
-            end
-        end)
+		task.spawn(function()
+			if afterrespawntp then
+				wait(0.5)
+			local humanoidrootpart = character:WaitForChild("HumanoidRootPart")
+			local x, y, z = tppos:match("([^,]+),([^,]+),([^,]+)")
+			x, y, z = tonumber(x), tonumber(y), tonumber(z)
+			local cf = CFrame.new(x, y, z)
+			humanoidrootpart.CFrame = cf
+			end
+		end)
         humanoid.Died:Connect(function()
-            if fastrespawn then
-                wait(0.5)
-                game:GetService("ReplicatedStorage").Remotes.Duels.RespawnNow:FireServer()
-            end
+			if fastrespawn then
+				wait(0.5)
+				game:GetService("ReplicatedStorage").Remotes.Duels.RespawnNow:FireServer()
+			end
         end)
     end)
 end
