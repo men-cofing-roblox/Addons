@@ -22,7 +22,7 @@ local function load(Tab)
     			end
     			availableServers = {}
     			for _, server in ipairs(response.data) do
-    			    if server.id ~= game.JobId and server.playing < server.maxPlayers and server.playing <= 8 then
+    			    if server.id ~= game.JobId and server.playing < server.maxPlayers and server.playing >= 8 then
     			        table.insert(availableServers, server.id)
     			    end
     			end
