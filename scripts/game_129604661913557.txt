@@ -1,0 +1,107 @@
+local addons = {}
+
+local function load(Tab)
+    local autocollect = false
+    local fastrespawn = false
+    local afterrespawntp = false
+    local tppos = "0,0,0"
+    Tab:CreateToggle({
+        Name = "Auto Collect",
+        CurrentValue = false,
+        Flag = tostring(game.PlaceId) .. "/AutoCollect",
+        Callback = function(Value)
+            autocollect = Value
+        end,
+    })
+    Tab:CreateToggle({
+        Name = "Fast Respawn (can be bannable)",
+        CurrentValue = false,
+        Flag = tostring(game.PlaceId) .. "/FastRespawn",
+        Callback = function(Value)
+            fastrespawn = Value
+        end,
+    })
+    Tab:CreateToggle({
+        Name = "after respawn tp",
+        CurrentValue = false,
+        Flag = tostring(game.PlaceId) .. "/afterrespawntp",
+        Callback = function(Value)
+            afterrespawntp = Value
+        end,
+    })
+    local Input = Tab:CreateInput({
+   Name = "tp pos",
+   CurrentValue = "0,0,0",
+   PlaceholderText = "0,0,0",
+   RemoveTextAfterFocusLost = false,
+   Flag = "tppos",
+   Callback = function(Text)
+        tppos = Text
+   end,
+})
+Tab:CreateButton({
+   Name = "set tp pos to body pos",
+   Callback = function()
+        local cf = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame
+        Input:Set(math.floor(cf.Position.X) .. "," .. math.floor(cf.Position.Y) .. "," .. math.floor(cf.Position.Z))
+        tppos = math.floor(cf.Position.X) .. "," .. math.floor(cf.Position.Y) .. "," .. math.floor(cf.Position.Z)
+   end,
+})
+    task.spawn(function()
+        while wait() do
+            if autocollect then
+            for i, v in ipairs(game:GetService("Workspace"):GetChildren()) do
+                if v.Name == "_drop" then
+                    pcall(function()
+                        firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, v, 0)
+                    end)
+                    pcall(function()
+                        firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, v, 1)
+                    end)
+                end
+            end
+            end
+        end
+    end)
+    pcall(function()
+        game:GetService("Players").LocalPlayer.Character.Humanoid.Died:Connect(function()
+        task.spawn(function()
+            if afterrespawntp then
+                wait(0.5)
+            local humanoidrootpart = character:WaitForChild("HumanoidRootPart")
+            local x, y, z = tppos:match("([^,]+),([^,]+),([^,]+)")
+            x, y, z = tonumber(x), tonumber(y), tonumber(z)
+            local cf = CFrame.new(x, y, z)
+            humanoidrootpart.CFrame = cf
+            end
+        end)
+            if fastrespawn then
+                wait(0.5)
+                game:GetService("ReplicatedStorage").Remotes.Duels.RespawnNow:FireServer()
+            end
+        end)
+    end)
+    game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function(character)
+        local humanoid = character:WaitForChild("Humanoid")
+        task.spawn(function()
+            if afterrespawntp then
+                wait(0.5)
+            local humanoidrootpart = character:WaitForChild("HumanoidRootPart")
+            local x, y, z = tppos:match("([^,]+),([^,]+),([^,]+)")
+            x, y, z = tonumber(x), tonumber(y), tonumber(z)
+            local cf = CFrame.new(x, y, z)
+            humanoidrootpart.CFrame = cf
+            end
+        end)
+        humanoid.Died:Connect(function()
+            if fastrespawn then
+                wait(0.5)
+                game:GetService("ReplicatedStorage").Remotes.Duels.RespawnNow:FireServer()
+            end
+        end)
+    end)
+end
+
+addons.Load = load
+return addons
+--addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
