@@ -32,7 +32,6 @@ local function load(Tab)
     			    return
     			end
     			game:GetService("TeleportService"):TeleportToPlaceInstance(129604661913557, availableServers[math.random(1, #availableServers)], game:GetService("Players").LocalPlayer)
-				timer = 0
 			end
 		else
 			timer = 0
