@@ -46,7 +46,7 @@ local function load(Tab)
 		end
 	end)
 end
-	local tppos = "2325,4365,1154"
+	local tppos = "5000,5000,5000"
 	Tab:CreateToggle({
 		Name = "Auto Collect",
 		CurrentValue = false,
@@ -82,7 +82,7 @@ end
 	})
 	local Input = Tab:CreateInput({
    Name = "tp pos",
-   CurrentValue = "2325,4365,1154",
+   CurrentValue = "5000,5000,5000",
    PlaceholderText = "0,0,0",
    RemoveTextAfterFocusLost = false,
    Flag = tostring(game.PlaceId) .. "/tppos",
