@@ -40,7 +40,7 @@ local function load(Tab)
 	end)
 	if not game:GetService("Players").LocalPlayer:GetAttribute("EnvironmentID") then
 	task.spawn(function()
-		wait(6)
+		wait(4)
 		if autojoinonhopserver then
 			game:GetService("ReplicatedStorage").Remotes.Arcade.Join:FireServer()
 		end
