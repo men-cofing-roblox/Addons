@@ -1,0 +1,32 @@
+local addons = {}
+
+
+local function load(Tab)
+	Tab:CreateLabel("More features on FFA", "triangle-alert", Color3.fromRGB(255,255,0), true)
+	Tab:CreateButton({
+   Name = "FFA Hop Server",
+   Callback = function()
+local success, response = pcall(function()
+        			return game:GetService("HttpService"):JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/129604661913557/servers/Public?sortOrder=Asc&limit=100"))
+    			end)
+    			if not success or not response.data then
+        			return
+    			end
+    			availableServers = {}
+    			for _, server in ipairs(response.data) do
+    			    if server.id ~= game.JobId and server.playing < server.maxPlayers and server.playing >= 8 then
+    			        table.insert(availableServers, server.id)
+    			    end
+    			end
+    			if #availableServers == 0 then
+    			    game:GetService("TeleportService"):Teleport(129604661913557, game:GetService("Players").LocalPlayer)
+    			    return
+    			end
+    			game:GetService("TeleportService"):TeleportToPlaceInstance(129604661913557, availableServers[math.random(1, #availableServers)], game:GetService("Players").LocalPlayer)
+   end,
+})
+end
+
+addons.Load = load
+return addons
+--addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
