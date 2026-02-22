@@ -9,6 +9,8 @@ local function load(Tab)
 	local autojoinonhopserver = false
 	local autohopserver = false
 	local waitminforhopserver = 2
+	local tptoplayers = false
+	local tptoplayersadd = "0,5,0"
 	game:GetService("RunService").RenderStepped:Connect(function(dt)
 		timer = timer + dt
 		if autohopserver then
@@ -46,6 +48,7 @@ local function load(Tab)
 	end)
 end
 	local tppos = "2641,5009,3323"
+	local delaytptoplayers = 100
 	Tab:CreateToggle({
 		Name = "Auto Collect",
 		CurrentValue = false,
@@ -72,14 +75,44 @@ end
 	})
 	
 	Tab:CreateToggle({
-		Name = "after respawn tp",
+		Name = "after respawn tp (can be bannable)",
 		CurrentValue = false,
 		Flag = tostring(game.PlaceId) .. "/afterrespawntp",
 		Callback = function(Value)
 			afterrespawntp = Value
 		end,
 	})
-	local Input = Tab:CreateInput({
+	Tab:CreateToggle({
+		Name = "tp to players (can be bannable) (beta)",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/tptoplayers",
+		Callback = function(Value)
+			tptoplayers = Value
+		end,
+	})
+
+local Input2 = Tab:CreateInput({
+   Name = "tp to players add",
+   CurrentValue = "0,5,0",
+   PlaceholderText = "0,0,0",
+   RemoveTextAfterFocusLost = false,
+   Flag = tostring(game.PlaceId) .. "/tptoplayersadd",
+   Callback = function(Text)
+		tptoplayersadd = Text
+   end,
+})
+Tab:CreateSlider({
+   Name = "Delay tp to players",
+   Range = {1, 1000},
+   Increment = 1,
+   Suffix = "MS",
+   CurrentValue = 100,
+   Flag = tostring(game.PlaceId) .. "/delaytptoplayers",
+   Callback = function(Value)
+	delaytptoplayers = Value
+   end,
+})
+local Input = Tab:CreateInput({
    Name = "tp pos",
    CurrentValue = "2641,5009,3323",
    PlaceholderText = "0,0,0",
@@ -89,7 +122,6 @@ end
 		tppos = Text
    end,
 })
-
 Tab:CreateButton({
    Name = "set tp pos to body pos",
    Callback = function()
@@ -183,6 +215,27 @@ local success, response = pcall(function()
 			end
         end)
     end)
+	task.spawn(function()
+		while true do
+			wait(delaytptoplayers/1000)
+			pcall(function()
+			if tptoplayers then
+			for k, v in pairs(game:GetService("Players"):GetPlayers()) do
+				if v.UserId ~= game:GetService("Players").LocalPlayer.UserId and v:GetAttribute("EnvironmentID") and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health >= 1 and v:GetAttribute("SpectatingDuelObjectID") and game:GetService("Players").LocalPlayer:GetAttribute("SpectatingDuelObjectID") then
+				local x, y, z = tptoplayersadd:match("([^,]+),([^,]+),([^,]+)")
+			x, y, z = tonumber(x), tonumber(y), tonumber(z)
+			local cf = CFrame.new(x, y, z)
+					pcall(function()
+						game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * cf
+					end)
+					break
+					
+				end
+			end
+			end
+			end)
+		end
+	end)
 end
 
 addons.Load = load
