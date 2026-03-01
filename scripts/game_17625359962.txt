@@ -2,7 +2,7 @@ local addons = {}
 
 
 local function load(Tab)
-	Tab:CreateLabel("More features on FFA", "triangle-alert", Color3.fromRGB(255,255,0), true)
+	Tab:CreateLabel("More features on FFA", "triangle-alert", Color3.fromRGB(255,255,0), false)
 	Tab:CreateButton({
    Name = "FFA Hop Server",
    Callback = function()
