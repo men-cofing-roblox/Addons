@@ -75,7 +75,7 @@ end
 	})
 	
 	Tab:CreateToggle({
-		Name = "after respawn tp (can be bannable)",
+		Name = "after respawn tp",
 		CurrentValue = false,
 		Flag = tostring(game.PlaceId) .. "/afterrespawntp",
 		Callback = function(Value)
@@ -83,7 +83,7 @@ end
 		end,
 	})
 	Tab:CreateToggle({
-		Name = "tp to players (can be bannable) (beta)",
+		Name = "tp to players (beta)",
 		CurrentValue = false,
 		Flag = tostring(game.PlaceId) .. "/tptoplayers",
 		Callback = function(Value)
