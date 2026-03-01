@@ -8,15 +8,6 @@ end
 local function chid_to_id(chid)
 	return string.byte(chid or string.char(0))
 end
-local function get_every_player_in_Environment(id)
-	local output = {}
-	for k, v in pairs(game:GetService("Players"):GetChildren()) do
-		if v:IsA("Player") and if_player_is_on_round_or_another(v) and chid_to_id(v:GetAttribute("EnvironmentID")) == id and v.UserId ~= game:GetService("Players").LocalPlayer.UserId  then
-			table.insert(output, v)
-		end
-	end
-	return output
-end
 local function get_every_player_in_Environment_but_without_thisteam(id,id2)
 	local output = {}
 	for k, v in pairs(game:GetService("Players"):GetChildren()) do
