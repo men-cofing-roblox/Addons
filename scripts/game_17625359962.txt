@@ -1,8 +1,86 @@
 local addons = {}
 
-
 local function load(Tab)
-	Tab:CreateLabel("More features on FFA", "triangle-alert", Color3.fromRGB(255,255,0), false)
+local function if_player_is_on_round_or_another(player)
+	return player:GetAttribute("EnvironmentID") ~= nil
+end
+
+local function chid_to_id(chid)
+	return string.byte(chid or string.char(0))
+end
+local function get_every_player_in_Environment(id)
+	local output = {}
+	for k, v in pairs(game:GetService("Players"):GetChildren()) do
+		if v:IsA("Player") and if_player_is_on_round_or_another(v) and chid_to_id(v:GetAttribute("EnvironmentID")) == id and v.UserId ~= game:GetService("Players").LocalPlayer.UserId  then
+			table.insert(output, v)
+		end
+	end
+	return output
+end
+local function get_every_player_in_Environment_but_without_thisteam(id,id2)
+	local output = {}
+	for k, v in pairs(game:GetService("Players"):GetChildren()) do
+		if v:IsA("Player") and if_player_is_on_round_or_another(v) and chid_to_id(v:GetAttribute("EnvironmentID")) == id and chid_to_id(v:GetAttribute("TeamID")) ~= id2 then
+			table.insert(output, v)
+		end
+	end
+	return output
+end
+	local timer = 0
+	local tptoplayers = false
+	local tptoplayersadd = "0,5,0"
+	local delaytptoplayers = 1
+	Tab:CreateToggle({
+		Name = "tp to players (beta)",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/tptoplayers",
+		Callback = function(Value)
+			tptoplayers = Value
+		end,
+	})
+local Input2 = Tab:CreateInput({
+   Name = "tp to players add",
+   CurrentValue = "0,5,0",
+   PlaceholderText = "0,0,0",
+   RemoveTextAfterFocusLost = false,
+   Flag = tostring(game.PlaceId) .. "/tptoplayersadd",
+   Callback = function(Text)
+		tptoplayersadd = Text
+   end,
+})
+Tab:CreateSlider({
+   Name = "Delay tp to players",
+   Range = {1, 1000},
+   Increment = 1,
+   Suffix = "MS",
+   CurrentValue = 1,
+   Flag = tostring(game.PlaceId) .. "/delaytptoplayers",
+   Callback = function(Value)
+	delaytptoplayers = Value
+   end,
+})
+game:GetService("RunService").RenderStepped:Connect(function(dt)
+	timer = timer + dt
+	if tptoplayers then
+		if timer >= delaytptoplayers/1000 then
+			local data = get_every_player_in_Environment_but_without_thisteam(chid_to_id(game:GetService("Players").LocalPlayer:GetAttribute("EnvironmentID")),chid_to_id(game:GetService("Players").LocalPlayer:GetAttribute("TeamID")))
+			for k, v in data do
+				if v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health >= 1 then
+					local x, y, z = tptoplayersadd:match("([^,]+),([^,]+),([^,]+)")
+					x, y, z = tonumber(x), tonumber(y), tonumber(z)
+					local cf = CFrame.new(x, y, z)
+					pcall(function()
+						game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * cf
+					end)
+				end
+			end
+			timer = 0
+		end
+	else
+		timer = 0
+	end
+end)
+Tab:CreateLabel("More features on FFA", "triangle-alert", Color3.fromRGB(100,100,0), true)
 	Tab:CreateButton({
    Name = "FFA Hop Server",
    Callback = function()
