@@ -218,7 +218,7 @@ local success, response = pcall(function()
 		timer2 = timer2 + dt
 		pcall(function()
 			if tptoplayers then
-				if timer2 >= delaytptoplayers then
+				if timer2 >= delaytptoplayers/1000 then
 					for k, v in pairs(game:GetService("Players"):GetPlayers()) do
 						if v.UserId ~= game:GetService("Players").LocalPlayer.UserId and v:GetAttribute("EnvironmentID") and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health >= 1 and v:GetAttribute("SpectatingDuelObjectID") and game:GetService("Players").LocalPlayer:GetAttribute("SpectatingDuelObjectID") then
 							local x, y, z = tptoplayersadd:match("([^,]+),([^,]+),([^,]+)")
