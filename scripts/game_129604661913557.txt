@@ -3,6 +3,7 @@ local addons = {}
 
 local function load(Tab)
 	local timer = 0
+	local timer2 = 0
 	local autocollect = false
 	local fastrespawn = false
 	local afterrespawntp = false
@@ -172,8 +173,7 @@ local success, response = pcall(function()
    end,
 })
 
-	task.spawn(function()
-		while wait() do
+	game:GetService("RunService").RenderStepped:Connect(function(dt)
 			if autocollect then
 			for i, v in ipairs(game:GetService("Workspace"):GetChildren()) do
 				if v.Name == "_drop" then
@@ -186,7 +186,6 @@ local success, response = pcall(function()
 				end
 			end
 			end
-		end
 	end)
 	pcall(function()
 		game:GetService("Players").LocalPlayer.Character.Humanoid.Died:Connect(function()
@@ -215,26 +214,29 @@ local success, response = pcall(function()
 			end
         end)
     end)
-	task.spawn(function()
-		while true do
-			wait(delaytptoplayers/1000)
-			pcall(function()
+	game:GetService("RunService").RenderStepped:Connect(function(dt)
+		timer2 = timer2 + dt
+		pcall(function()
 			if tptoplayers then
-			for k, v in pairs(game:GetService("Players"):GetPlayers()) do
-				if v.UserId ~= game:GetService("Players").LocalPlayer.UserId and v:GetAttribute("EnvironmentID") and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health >= 1 and v:GetAttribute("SpectatingDuelObjectID") and game:GetService("Players").LocalPlayer:GetAttribute("SpectatingDuelObjectID") then
-				local x, y, z = tptoplayersadd:match("([^,]+),([^,]+),([^,]+)")
-			x, y, z = tonumber(x), tonumber(y), tonumber(z)
-			local cf = CFrame.new(x, y, z)
-					pcall(function()
-						game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * cf
-					end)
-					break
-					
+				if timer2 >= delaytptoplayers then
+					for k, v in pairs(game:GetService("Players"):GetPlayers()) do
+						if v.UserId ~= game:GetService("Players").LocalPlayer.UserId and v:GetAttribute("EnvironmentID") and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health >= 1 and v:GetAttribute("SpectatingDuelObjectID") and game:GetService("Players").LocalPlayer:GetAttribute("SpectatingDuelObjectID") then
+							local x, y, z = tptoplayersadd:match("([^,]+),([^,]+),([^,]+)")
+							x, y, z = tonumber(x), tonumber(y), tonumber(z)
+							local cf = CFrame.new(x, y, z)
+							pcall(function()
+								game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * cf
+							end)
+							break
+
+						end
+					end
+					timer2 = 0
 				end
+			else
+				timer2 = 0
 			end
-			end
-			end)
-		end
+		end)
 	end)
 end
 
