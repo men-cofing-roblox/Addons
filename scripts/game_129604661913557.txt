@@ -225,7 +225,7 @@ local success, response = pcall(function()
    end,
 })
     task.spawn(function()
-	while task.wait(0.1) do
+	while task.wait() do
 			if autocollect then
 			for i, v in ipairs(game:GetService("Workspace"):GetChildren()) do
 				if v.Name == "_drop" then
