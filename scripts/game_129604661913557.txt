@@ -156,8 +156,8 @@ Tab:CreateToggle({
 })
 Tab:CreateSlider({
    Name = "obrit range",
-   Range = {30000, 100000},
-   Increment = 10000,
+   Range = {1000, 100000},
+   Increment = 1000,
    Suffix = "Studs",
    CurrentValue = 30000,
    Flag = tostring(game.PlaceId) .. "/obritrange",
