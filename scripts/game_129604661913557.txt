@@ -229,7 +229,12 @@ local success, response = pcall(function()
 			if autocollect then
 			for i, v in ipairs(game:GetService("Workspace"):GetChildren()) do
 				if v.Name == "_drop" then
+					pcall(function()
 					firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, v, 0)
+					end)
+					pcall(function()
+					firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, v, 1)
+					end)
 				end
 			end
 			end
