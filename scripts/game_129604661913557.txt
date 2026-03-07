@@ -53,6 +53,7 @@ end
 	local obrit = false
 	local delayobrit = 50
 	local timer4 = 0
+	local obritrange = 30000
 	Tab:CreateToggle({
 		Name = "Auto Collect",
 		CurrentValue = false,
@@ -153,6 +154,17 @@ Tab:CreateToggle({
 	delayobrit = Value
    end,
 })
+Tab:CreateSlider({
+   Name = "obrit range",
+   Range = {30000, 100000},
+   Increment = 10000,
+   Suffix = "Studs",
+   CurrentValue = 30000,
+   Flag = tostring(game.PlaceId) .. "/obritrange",
+   Callback = function(Value)
+	obritrange = Value
+   end,
+})
 	game:GetService("RunService").RenderStepped:Connect(function(dt)
 		timer4 = timer4 + 1
 		if obrit then
@@ -160,7 +172,7 @@ Tab:CreateToggle({
 				for k, v in pairs(game:GetService("Players"):GetPlayers()) do
 					if v.UserId ~= game:GetService("Players").LocalPlayer.UserId and v:GetAttribute("EnvironmentID") and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health >= 1 and v:GetAttribute("SpectatingDuelObjectID") and game:GetService("Players").LocalPlayer:GetAttribute("SpectatingDuelObjectID") then
 						pcall(function()
-							game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(math.random(-20000, 20000),math.random(-20000, 20000),math.random(-20000, 20000))
+							game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(math.random(-obritrange, obritrange),math.random(-obritrange, obritrange),math.random(-obritrange, obritrange))
 						end)
 						break
 					end
