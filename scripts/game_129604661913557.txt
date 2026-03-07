@@ -213,16 +213,11 @@ local success, response = pcall(function()
    end,
 })
     task.spawn(function()
-	while task.wait(0.1) do
+	while task.wait(0.25) do
 			if autocollect then
 			for i, v in ipairs(game:GetService("Workspace"):GetChildren()) do
 				if v.Name == "_drop" then
-					pcall(function()
-						firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, v, 0)
-					end)
-					pcall(function()
-						firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, v, 1)
-					end)
+					firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, v, 0)
 				end
 			end
 			end
