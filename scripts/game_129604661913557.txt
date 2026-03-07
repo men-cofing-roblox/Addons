@@ -159,7 +159,7 @@ Tab:CreateSlider({
    Range = {1000, 100000},
    Increment = 1000,
    Suffix = "Studs",
-   CurrentValue = 30000,
+   CurrentValue = 50000,
    Flag = tostring(game.PlaceId) .. "/obritrange",
    Callback = function(Value)
 	obritrange = Value
