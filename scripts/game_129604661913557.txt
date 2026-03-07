@@ -156,7 +156,7 @@ Tab:CreateToggle({
 	game:GetService("RunService").RenderStepped:Connect(function(dt)
 		timer4 = timer4 + 1
 		if obrit then
-			if delayobrit >= timer4 then
+			if delayobrit <= timer4 then
 				for k, v in pairs(game:GetService("Players"):GetPlayers()) do
 					if v.UserId ~= game:GetService("Players").LocalPlayer.UserId and v:GetAttribute("EnvironmentID") and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health >= 1 and v:GetAttribute("SpectatingDuelObjectID") and game:GetService("Players").LocalPlayer:GetAttribute("SpectatingDuelObjectID") then
 						pcall(function()
