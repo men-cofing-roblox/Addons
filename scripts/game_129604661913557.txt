@@ -51,9 +51,9 @@ end
 	local tppos = "2641,5009,3323"
 	local delaytptoplayers = 100
 	local obrit = false
-	local delayobrit = 50
+	local delayobrit = 0
 	local timer4 = 0
-	local obritrange = 30000
+	local obritrange = 1000000
 	Tab:CreateToggle({
 		Name = "Auto Collect",
 		CurrentValue = false,
@@ -143,28 +143,7 @@ Tab:CreateToggle({
 			obrit = Value
 		end,
 	})
-	Tab:CreateSlider({
-   Name = "Delay obrit",
-   Range = {0, 100},
-   Increment = 1,
-   Suffix = "Frames",
-   CurrentValue = 50,
-   Flag = tostring(game.PlaceId) .. "/delayobrit",
-   Callback = function(Value)
-	delayobrit = Value
-   end,
-})
-Tab:CreateSlider({
-   Name = "obrit range",
-   Range = {1000, 100000},
-   Increment = 1000,
-   Suffix = "Studs",
-   CurrentValue = 50000,
-   Flag = tostring(game.PlaceId) .. "/obritrange",
-   Callback = function(Value)
-	obritrange = Value
-   end,
-})
+
 	game:GetService("RunService").RenderStepped:Connect(function(dt)
 		timer4 = timer4 + 1
 		if obrit then
