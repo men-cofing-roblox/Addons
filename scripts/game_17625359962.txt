@@ -22,7 +22,7 @@ end
 	local tptoplayersadd = "0,5,0"
 	local delaytptoplayers = 1
     local obrit = false
-	local obritrange = 1000000000
+	local obritrange = 10000000
 	Tab:CreateToggle({
 		Name = "tp to players (beta)",
 		CurrentValue = false,
