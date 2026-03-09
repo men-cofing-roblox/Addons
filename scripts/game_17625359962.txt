@@ -22,9 +22,7 @@ end
 	local tptoplayersadd = "0,5,0"
 	local delaytptoplayers = 1
     local obrit = false
-    local delayobrit = 0
-	local timer4 = 0
-	local obritrange = 1000000
+	local obritrange = 1000000000
 	Tab:CreateToggle({
 		Name = "tp to players (beta)",
 		CurrentValue = false,
@@ -63,9 +61,7 @@ Tab:CreateToggle({
 		end,
 	})
 game:GetService("RunService").RenderStepped:Connect(function(dt)
-	timer4 = timer4 + 1
 	if obrit then
-		if timer4 >= delayobrit then
 			local data = get_every_player_in_Environment_but_without_thisteam(chid_to_id(game:GetService("Players").LocalPlayer:GetAttribute("EnvironmentID")),chid_to_id(game:GetService("Players").LocalPlayer:GetAttribute("TeamID")))
 			for k, v in data do
 				if v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health >= 1 then
@@ -74,11 +70,7 @@ game:GetService("RunService").RenderStepped:Connect(function(dt)
 					end)
                     break
 				end
-			end
-			timer4 = 0
 		end
-	else
-		timer4 = 0
 	end
 end)
 game:GetService("RunService").RenderStepped:Connect(function(dt)
