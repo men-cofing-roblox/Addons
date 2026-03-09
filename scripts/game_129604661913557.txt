@@ -51,7 +51,7 @@ end
 	local tppos = "2641,5009,3323"
 	local delaytptoplayers = 100
 	local obrit = false
-	local obritrange = 1000000000
+	local obritrange = 10000000
 	Tab:CreateToggle({
 		Name = "Auto Collect",
 		CurrentValue = false,
