@@ -22,10 +22,6 @@ local function load(Tab)
     )
 end)
 
-if not success or not response.data then
-    return
-end
-
 local availableServers = {}
 
 for _, server in ipairs(response.data) do
@@ -34,9 +30,6 @@ for _, server in ipairs(response.data) do
     end
 end
 
-if #availableServers == 0 then
-    return
-end
 
 game:GetService("TeleportService"):TeleportToPlaceInstance(
     129604661913557,
@@ -191,20 +184,12 @@ local success, response = pcall(function()
     )
 end)
 
-if not success or not response.data then
-    return
-end
-
 local availableServers = {}
 
 for _, server in ipairs(response.data) do
     if server.id ~= game.JobId and server.playing < server.maxPlayers and server.playing <= 6 then
         table.insert(availableServers, server.id)
     end
-end
-
-if #availableServers == 0 then
-    return
 end
 
 game:GetService("TeleportService"):TeleportToPlaceInstance(
