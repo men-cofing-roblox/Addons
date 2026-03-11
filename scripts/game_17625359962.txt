@@ -104,10 +104,6 @@ local success, response = pcall(function()
     )
 end)
 
-if not success or not response.data then
-    return
-end
-
 local availableServers = {}
 
 for _, server in ipairs(response.data) do
@@ -116,9 +112,6 @@ for _, server in ipairs(response.data) do
     end
 end
 
-if #availableServers == 0 then
-    return
-end
 
 game:GetService("TeleportService"):TeleportToPlaceInstance(
     129604661913557,
