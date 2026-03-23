@@ -1,0 +1,67 @@
+local addons = {}
+
+local function load(Tab)
+    local prof = nil
+    for i,v in pairs(workspace.Plots:GetChildren()) do
+    	if v:GetAttribute("USERID") ~= game:GetService("Players").LocalPlayer.UserId then continue end
+        prof = v
+        break
+    end
+	local _1 = false
+    local _2 = false
+    local _3 = false
+    Tab:CreateToggle({
+		Name = "Auto Collect",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/AutoCollect",
+		Callback = function(Value)
+			_1 = Value
+		end,
+	})
+    Tab:CreateToggle({
+		Name = "Auto Upload All",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/AutoUploadAll",
+		Callback = function(Value)
+			_2 = Value
+		end,
+	})
+    Tab:CreateToggle({
+		Name = "Auto Claim All",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/AutoClaimAll",
+		Callback = function(Value)
+			_3 = Value
+		end,
+	})
+    task.spawn(function()
+        while task.wait() do
+            if _1 then
+                for i,v in pairs(prof.Builds:GetChildren()) do
+                    game:GetService("ReplicatedStorage"):WaitForChild("events"):WaitForChild("collect"):FireServer(v.Name)
+                    task.wait(0.1)
+                end
+            end
+        end
+    end)
+    task.spawn(function()
+        while task.wait() do
+            if _2 then
+                game:GetService("ReplicatedStorage"):WaitForChild("events"):WaitForChild("uploadAll"):FireServer()
+                task.wait(0.1)
+            end
+        end
+    end)
+    task.spawn(function()
+        while task.wait() do
+            if _3 then
+                game:GetService("ReplicatedStorage"):WaitForChild("events"):WaitForChild("claimAll"):FireServer()
+                task.wait(0.1)
+            end
+        end
+    end)
+end
+
+addons.Load = load
+return addons
+--addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
