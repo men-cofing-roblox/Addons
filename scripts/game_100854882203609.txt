@@ -1,0 +1,51 @@
+local addons = {}
+
+local function load(Tab)
+	local _1 = false
+	local _2 = false
+	Tab:CreateToggle({
+		Name = "Auto Grab",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/AutoGrab", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			_1 = Value
+		end,
+	})
+	Tab:CreateToggle({
+		Name = "Auto Place",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/AutoPlace", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			_2 = Value
+		end,
+	})
+    game:GetService("RunService").RenderStepped:Connect(function(dt)
+            local children = workspace._Map:GetChildren()
+
+if #children == 0 or not children[1] or not children[1]:FindFirstChild("_DebrisPile") or not _1 then
+    return
+end   
+local children2 = game:GetService("Players").LocalPlayer.Character:GetChildren()
+            for _,part in pairs(children2) do
+                pcall(function()firetouchinterest(children[1]._DebrisPile, part, true)end)
+            pcall(function()firetouchinterest(children[1]._DebrisPile, part, false)end)
+            end  
+    end)
+    task.spawn(function()
+        while task.wait() do
+            if not _2 then
+                continue
+            end
+            local children = game:GetService("Players").LocalPlayer.Character:GetChildren()
+            for _,part in pairs(children) do
+                if string.find(part.Name, "^_") and part:GetAttribute("Index") then
+                    game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Gameplay"):WaitForChild("BuildPart"):FireServer(part.Name)
+                end
+            end
+        end
+    end)
+end
+
+addons.Load = load
+return addons
+--addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
