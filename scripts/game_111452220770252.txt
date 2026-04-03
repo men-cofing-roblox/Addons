@@ -1,0 +1,23 @@
+local addons = {}
+
+local function load(Tab)
+	local _1 = false
+	Tab:CreateToggle({
+		Name = "Inf Money Github",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/InfMoneyGithub", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+		Callback = function(Value)
+			_1 = Value
+		end,
+	})
+	while task.wait() do
+		if not _1 then
+            continue
+        end
+        game:GetService("ReplicatedStorage"):WaitForChild("Networking"):WaitForChild("Server"):WaitForChild("RemoteEvents"):WaitForChild("DamageEvents"):WaitForChild("PhysicsDamage"):FireServer(9999999)
+	end
+end
+
+addons.Load = load
+return addons
+--addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
