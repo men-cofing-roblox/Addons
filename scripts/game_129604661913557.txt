@@ -208,7 +208,6 @@ game:GetService("TeleportService"):TeleportToPlaceInstance(
 					pcall(function()
 					firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, v, true)
 					end)
-					task.wait()
 					pcall(function()
 					firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, v, false)
 					end)
