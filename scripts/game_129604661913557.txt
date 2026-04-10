@@ -2,6 +2,8 @@ local addons = {}
 
 
 local function load(Tab)
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 	local timer = 0
 	local timer2 = 0
 	local autocollect = false
@@ -54,6 +56,38 @@ end
 	local delaytptoplayers = 100
 	local obrit = false
 	local obritrange = 10000000
+	local animenabled = false
+	local animtype = "Tornado"
+	local function danceupdate(character)
+	local animations = {
+	Tornado = 135373056067761,
+	LLLLLLL = 104639476409829,
+	Gangnam = 78801539668900
+}
+	local humanoid = character:WaitForChild("Humanoid")
+	for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
+	track:Stop()
+end
+	local animate = character:FindFirstChild("Animate")
+	if animate then
+		animate.Disabled = animenabled
+	end
+	if animenabled then
+	local animation = Instance.new("Animation")
+	animation.AnimationId = "rbxassetid://".. animations[animtype]
+	local animTrack = humanoid:LoadAnimation(animation)
+	animTrack.Priority = Enum.AnimationPriority.Action4
+	animTrack.Looped = true
+	animTrack:Play()
+	else
+		for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
+	if track.Priority == Enum.AnimationPriority.Action4 then
+		track:Stop()
+	end
+end
+	end
+end
+player.CharacterAdded:Connect(function(c) task.wait(0.75) danceupdate(c) end)
 	Tab:CreateToggle({
 		Name = "Auto Collect",
 		CurrentValue = false,
@@ -143,7 +177,26 @@ Tab:CreateToggle({
 			obrit = Value
 		end,
 	})
-
+Tab:CreateToggle({
+		Name = "dance enabled",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/danceenabled",
+		Callback = function(Value)
+			animenabled = Value
+			danceupdate(game:GetService("Players").LocalPlayer.Character)
+		end,
+	})
+	Tab:CreateDropdown({
+   Name = "dance type",
+   Options = {"LLLLLLL","Tornado","Gangnam"},
+   CurrentOption = {"Tornado"},
+   MultipleOptions = false,
+   Flag = tostring(game.PlaceId) .. "/dancetype", 
+   Callback = function(Options)
+	animtype = Options[1]
+	danceupdate(game:GetService("Players").LocalPlayer.Character)
+   end,
+})
 	game:GetService("RunService").RenderStepped:Connect(function(dt)
 		if obrit then
 				for k, v in pairs(game:GetService("Players"):GetPlayers()) do
