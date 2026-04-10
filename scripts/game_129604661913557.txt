@@ -98,7 +98,7 @@ end
 end
 	end
 end
-player.CharacterAdded:Connect(function(c) task.wait(0.75) if animenabled then danceupdate(c) end end)
+player.CharacterAdded:Connect(function(c) task.wait(0.5) if animenabled then danceupdate(c) end end)
 	Tab:CreateToggle({
 		Name = "Auto Collect",
 		CurrentValue = false,
