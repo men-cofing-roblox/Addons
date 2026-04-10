@@ -118,7 +118,7 @@ Tab:CreateToggle({
 	Tab:CreateDropdown({
    Name = "dance type",
    Options = {"LLLLLLL","Tornado","Gangnam","SexyKarmelek","AssSpin","Spider","Epstein","Fish","Chinaobrit","Jugglehead","HeadObrit","Japko","KoreaObrit","Brazil"},
-   CurrentOption = {"Tornado"},
+   CurrentOption = {"Gangnam"},
    MultipleOptions = false,
    Flag = tostring(game.PlaceId) .. "/dancetype", 
    Callback = function(Options)
