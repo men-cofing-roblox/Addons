@@ -26,12 +26,23 @@ end
     local obrit = false
 	local obritrange = 10000000
     local animenabled = false
-	local animtype = "Tornado"
+	local animtype = "Gangnam"
 	local function danceupdate(character)
 	local animations = {
 	Tornado = 135373056067761,
 	LLLLLLL = 104639476409829,
-	Gangnam = 78801539668900
+	Gangnam = 78801539668900,
+    SexyKarmelek = 102998462448180,
+    AssSpin = 77094699387328,
+    Spider = 113923275362771,
+    Epstein = 111726465575659,
+    Fish = 116819742540173,
+    Chinaobrit = 80627968348042,
+    Jugglehead = 130158622704929,
+    HeadObrit = 136642332796314,
+    Japko = 96207427647725,
+    KoreaObrit = 102592263338924,
+    Brazil = 83796130837213
 }
 	local humanoid = character:WaitForChild("Humanoid")
 	for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
@@ -106,7 +117,7 @@ Tab:CreateToggle({
 	})
 	Tab:CreateDropdown({
    Name = "dance type",
-   Options = {"LLLLLLL","Tornado","Gangnam"},
+   Options = {"LLLLLLL","Tornado","Gangnam","SexyKarmelek","AssSpin","Spider","Epstein","Fish","Chinaobrit","Jugglehead","HeadObrit","Japko","KoreaObrit","Brazil"},
    CurrentOption = {"Tornado"},
    MultipleOptions = false,
    Flag = tostring(game.PlaceId) .. "/dancetype", 
