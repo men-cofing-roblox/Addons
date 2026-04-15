@@ -21,7 +21,7 @@ local function load(Tab)
 		local ohTable1 = {
 			["Color"] = math.random(0, 1000)/1000,
 			["Pic"] = math.random(1, 7),
-			["Pose"] = math.random(1, 5),
+			["Pose"] = math.random(1, 7),
 			["Arrow"] = math.random(1, 4)
 		}
 		local letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZqwertyuiopasdfghjklzxcvbnm1234567890!@#$%^&*()[]{};:,<>.?"
