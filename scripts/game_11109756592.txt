@@ -38,5 +38,5 @@ local function load(Tab)
 end
 
 addons.Load = load
-return addons,80
+return addons,55
 --addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
