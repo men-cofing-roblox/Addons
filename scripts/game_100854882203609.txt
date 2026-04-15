@@ -47,5 +47,5 @@ local children2 = game:GetService("Players").LocalPlayer.Character:GetChildren()
 end
 
 addons.Load = load
-return addons,70
+return addons,65
 --addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
