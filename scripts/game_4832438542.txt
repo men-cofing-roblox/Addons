@@ -37,4 +37,4 @@ local function load(Tab)
 end
 
 addons.Load = load
-return addons
+return addons,45
