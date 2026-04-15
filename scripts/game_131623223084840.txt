@@ -69,5 +69,5 @@ Tab:CreateButton({
 end
 
 addons.Load = load
-return addons
+return addons,130
 --addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
