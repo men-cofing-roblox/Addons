@@ -92,3 +92,5 @@ end
 libui.CreateSection = function(self,namelib)
     self["_Tab"]:button({name = namelib,callback = function()end})
 end
+
+return libui
