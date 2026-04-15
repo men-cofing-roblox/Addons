@@ -1,39 +1,94 @@
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-local Window = Rayfield:CreateWindow({
-   Name = "Men Cofing | Addons | testing",
-   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-   LoadingTitle = "Men Cofing",
-   LoadingSubtitle = "by MenCofing",
-   ShowText = "MenCofing", -- for mobile users to unhide rayfield, change if you'd like
-   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+local chars = "abcdefghijklmnopqrstuvwxyz0123456789"
+function randomString(length)
+    local result = ""
+    for i = 1, length do
+        local rand = math.random(1, #chars)
+        result = result .. chars:sub(rand, rand)
+    end
+    return result
+end
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/igorgames-htm/SplixUiLib/refs/heads/main/Main?"..randomString(16)))()
+local window = library:new({textsize = 13.5,font = Enum.Font.RobotoMono,name = "Men Config Addons",color = Color3.fromRGB(110,110,110),mobile = "MenConfig"})
+window.key = Enum.KeyCode.P
+window.x = false
+window.y = false
+local thisgameui = window:page({name = "ThisGame"})
+local gametab = thisgameui:section({name = "Main",side = "left",size = sizetab})
 
-   ToggleUIKeybind = "P", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
+local libui = {["_Tab"] = gametab}
 
-   DisableRayfieldPrompts = true,
-   DisableBuildWarnings = true, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+libui.CreateButton = function(self,data)
+    local namelib = data.Name or data.name or "Button"
+    local callbacklib = data.Callback or data.callback or function()end
+    self["_Tab"]:button({name = namelib,callback = callbacklib})
+    return
+end
 
-   ConfigurationSaving = {
-      Enabled = false,
-      FolderName = nil, -- Create a custom folder for your hub/game
-      FileName = "Big Hub"
-   },
+libui.CreateToggle = function(self,data)
+    local namelib = data.Name or data.name or "Toggle"
+    local callbacklib = data.Callback or data.callback or function(value)end
+    local currentvalue = data.CurrentValue or data.currentvalue or false
+    local setidk = self["_Tab"]:toggle({name = namelib,def = currentvalue,callback = callbacklib})
+    return {["Set"] = function(...)
+        setidk:set(...)
+    end}
+end
 
-   Discord = {
-      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
-      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
-      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
-   },
+libui.CreateColorPicker = function(self,data)
+    local namelib = data.Name or data.name or "ColorPicker"
+    local callbacklib = data.Callback or data.callback or function(value)end
+    local color = data.Color or data.color or Color3.new(1,1,1)
+    local setidk = self["_Tab"]:colorpicker({name = namelib,cpname = nil,def = color,callback = callbacklib})
+    return {["Set"] = function(...)
+        setidk:set(...)
+    end}
+end
 
-   KeySystem = false, -- Set this to true to use our key system
-   KeySettings = {
-      Title = "Untitled",
-      Subtitle = "Key System",
-      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
-      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
-   }
-})
-local Tab = Window:CreateTab("placeid: "..game.PlaceId, 0)
-return Tab
+libui.CreateSlider = function(self,data)
+    local namelib = data.Name or data.name or "Slider"
+    local callbacklib = data.Callback or data.callback or function(value)end
+    local range = data.Range or data.range or {0,100}
+    local roundinglib = data.Rounding or data.rounding or true
+    local currentvalue = data.CurrentValue or data.currentvalue or 10
+    local suffix = data.Suffix or data.suffix or "Banana"
+    local setidk = self["_Tab"]:slider({name = namelib,def = currentvalue, max = range[2],min = range[1],rounding = roundinglib,ticking = false,measuring = suffix,callback = callbacklib})
+    return {["Set"] = function(...)
+        setidk:set(...)
+    end}
+end
+
+libui.CreateInput = function(self,data)
+    local namelib = data.Name or data.name or "Input"
+    local callbacklib = data.Callback or data.callback or function(value)end
+    local currentvalue = data.CurrentValue or data.currentvalue or ""
+    local placeholdertext = data.PlaceholderText or data.placeholdertext or "Input Placeholder"
+    local setidk = self["_Tab"]:textbox({name = namelib,def = currentvalue,placeholder = placeholdertext,callback = callbacklib})
+    return {["Set"] = function(...)
+        setidk:set(...)
+    end}
+end
+
+libui.CreateDropdown = function(self,data)
+    local namelib = data.Name or data.name or "Dropdown"
+    local callbacklib = data.Callback or data.callback or function(value)end
+    local currentoption = data.CurrentOption or data.currentoption or {"Option 1"}
+    local optionslib = data.Options or data.options or {"Option 1", "Option 2"}
+    local multipleoptions = data.MultipleOptions or data.multipleoptions or false
+    local setidk = nil
+    if multipleoptions then
+        setidk = self["_Tab"]:multibox({name = namelib,def = currentoption, max = 6,options = optionslib,callback = callbacklib})
+    else
+        setidk = self["_Tab"]:dropdown({name = namelib,def = currentoption[1],max = 6,options = optionslib,callback = function(...) callbacklib({...}) end})
+    end
+    return {["Set"] = function(...)
+        setidk:set(...)
+    end}
+end
+
+libui.CreateLabel = function(self,namelib)
+    self["_Tab"]:button({name = namelib,callback = function()end})
+end
+
+libui.CreateSection = function(self,namelib)
+    self["_Tab"]:button({name = namelib,callback = function()end})
+end
