@@ -19,6 +19,41 @@ local function get_every_player_in_Environment_but_without_thisteam(id,id2)
 	end
 	return output
 end
+local function getplayerloadout(player)
+    local hasit = ""
+    local itemsleft = {}
+    if player == game:GetService("Players").LocalPlayer then
+        hasit = string.split(workspace.ViewModels.FirstPerson:GetChildren()[1].Name," - ")[2]
+    else
+        for _,v in pairs(workspace.ViewModels:GetChildren()) do
+            local split = string.split(v.Name," - ")
+            if split[1] == player.Name then
+                hasit = split[2]
+                break
+            end
+        end
+    end
+    for _,v in pairs(game:GetService("ReplicatedStorage").Assets.Temp.ViewModels:GetChildren()) do
+        local split = string.split(v.Name," - ")
+        if split[1] == player.Name then
+            table.insert(itemsleft,split[2])
+        end
+    end
+    return {has=hasit,left=itemsleft}
+end
+local function isneedtobefront(player)
+    local loadout = getplayerloadout(player)
+    local ishasriot = false
+    local ishasonkatana = loadout.has == "Katana"
+    local ishasonriot = loadout.has == "Riot Shield"
+    for i,v in loadout.left do
+		if v == "Riot Shield" then
+			ishasriot = true
+			break
+		end
+    end
+    return ishasriot or (ishasonkatana or not ishasonriot)
+end
 	local timer = 0
 	local tptoplayers = false
 	local tptoplayersadd = "0,5,0"
@@ -99,7 +134,7 @@ Tab:CreateSlider({
    end,
 })
 Tab:CreateToggle({
-		Name = "obrit",
+		Name = "obrit v2",
 		CurrentValue = false,
 		Flag = tostring(game.PlaceId) .. "/obrit",
 		Callback = function(Value)
@@ -132,7 +167,7 @@ game:GetService("RunService").RenderStepped:Connect(function(dt)
 			for k, v in data do
 				if v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health >= 1 then
 					pcall(function()
-						game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(math.random(-obritrange, obritrange),math.random(-obritrange, obritrange),math.random(-obritrange, obritrange))
+						game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(math.random(-obritrange, obritrange),math.random(-obritrange, obritrange),(isneedtobefront(v) and -0 or 0) + obritrange)
 					end)
                     break
 				end
@@ -190,5 +225,5 @@ game:GetService("TeleportService"):TeleportToPlaceInstance(
 end
 
 addons.Load = load
-return addons,230
---addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
+--return addons,230
+addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
