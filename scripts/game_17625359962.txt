@@ -207,7 +207,7 @@ local ShootAnim = false
 local ReloadAnim = false
 local RecoilAnim = false
 	Tab:CreateToggle({
-		Name = "Delete ShootAnim",
+		Name = "Delete ShootAnim (7+)",
 		CurrentValue = false,
 		Flag = tostring(game.PlaceId) .. "/delete1",
 		Callback = function(Value)
@@ -215,7 +215,7 @@ local RecoilAnim = false
 		end,
 	})
 Tab:CreateToggle({
-		Name = "Delete ReloadAnim",
+		Name = "Delete ReloadAnim (7+)",
 		CurrentValue = false,
 		Flag = tostring(game.PlaceId) .. "/delete2",
 		Callback = function(Value)
@@ -223,7 +223,7 @@ Tab:CreateToggle({
 		end,
 	})
 Tab:CreateToggle({
-		Name = "Delete RecoilAnim",
+		Name = "Delete RecoilAnim (7+)",
 		CurrentValue = false,
 		Flag = tostring(game.PlaceId) .. "/delete3",
 		Callback = function(Value)
