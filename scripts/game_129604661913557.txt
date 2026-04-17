@@ -4,6 +4,36 @@ local addons = {}
 local function load(Tab)
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
+local function findStringInTable(tbl, search)
+    for _, value in ipairs(tbl) do
+        if value == search then
+            return true
+        end
+    end
+    return false
+end
+local function getplayerloadout(player)
+    local hasit = ""
+    local itemsleft = {}
+    if player == game:GetService("Players").LocalPlayer then
+        hasit = string.split(workspace.ViewModels.FirstPerson:GetChildren()[1].Name," - ")[2]
+    else
+        for _,v in pairs(workspace.ViewModels:GetChildren()) do
+            local split = string.split(v.Name," - ")
+            if split[1] == player.Name then
+                hasit = split[2]
+                break
+            end
+        end
+    end
+    for _,v in pairs(game:GetService("ReplicatedStorage").Assets.Temp.ViewModels:GetChildren()) do
+        local split = string.split(v.Name," - ")
+        if split[1] == player.Name then
+            table.insert(itemsleft,split[2])
+        end
+    end
+    return {has=hasit,left=itemsleft}
+end
 local function getplayerloadout(player)
     local hasit = ""
     local itemsleft = {}
@@ -255,6 +285,38 @@ Tab:CreateToggle({
 				end
 		end
 	end)
+	if getidentity() >= 7 then
+local deletetuff = {}
+	Tab:CreateDropdown({
+   Name = "Delete ViewModel Thing (7+)",
+   Options = {"Shoot Anim","Reload Anim","Recoil Anim"},
+   CurrentOption = {},
+   MultipleOptions = true,
+   Flag = tostring(game.PlaceId) .. "/deleteviewmodelfunc", 
+   Callback = function(Options)
+	deletetuff = Options
+   end,
+})
+local cc = require(game:GetService("Players").LocalPlayer.PlayerScripts.Modules.ClientReplicatedClasses.ClientFighter.ClientItem.ClientViewModel)
+
+cc.PlayAnimation = function(p43, animName, ...)
+	if string.find(animName,"Shoot") and findStringInTable(deletetuff,"Shoot Anim") then
+		return
+	end
+	if string.find(animName,"Reload") and findStringInTable(deletetuff,"Reload Anim") then
+		return
+	end
+	return p43.Animator:PlayAnimation(animName, ...)
+end
+local old = cc.ApplyRecoil;cc.ApplyRecoil = function(...)
+	if findStringInTable(deletetuff,"Recoil Anim") then
+		return
+	else	
+		return old(...)
+	end
+end
+
+end
 Tab:CreateToggle({
 		Name = "Auto Hop Server",
 		CurrentValue = false,
