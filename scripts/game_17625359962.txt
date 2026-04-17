@@ -207,7 +207,7 @@ if getidentity() >= 7 then
 local deletetuff = {}
 	Tab:CreateDropdown({
    Name = "Delete ViewModel Thing (7+)",
-   Options = {"Shoot Anim","Reload Anim","Muzzle Flash","Recoil Anim"},
+   Options = {"Shoot Anim","Reload Anim","Recoil Anim"},
    CurrentOption = {},
    MultipleOptions = true,
    Flag = tostring(game.PlaceId) .. "/deleteviewmodelfunc", 
@@ -234,13 +234,6 @@ local old = cc.ApplyRecoil;cc.ApplyRecoil = function(...)
 	end
 end
 
-local old = cc.MuzzleFlash;cc.MuzzleFlash = function(...)
-	if findStringInTable(deletetuff,"Muzzle Flash") then
-		return
-	else	
-		return old(...)
-	end
-end
 end
 
 Tab:CreateLabel("More features on FFA", "triangle-alert", Color3.fromRGB(100,100,0), true)
@@ -274,5 +267,5 @@ game:GetService("TeleportService"):TeleportToPlaceInstance(
 end
 
 addons.Load = load
---return addons,230
-addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
+return addons,230
+--addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
