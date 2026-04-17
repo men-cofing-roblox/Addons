@@ -232,6 +232,7 @@ Tab:CreateToggle({
 local ShootAnim = false
 local ReloadAnim = false
 local RecoilAnim = false
+local MuzzleFlash = false
 	Tab:CreateToggle({
 		Name = "Delete ShootAnim (7+)",
 		CurrentValue = false,
@@ -256,6 +257,14 @@ Tab:CreateToggle({
 			RecoilAnim = Value
 		end,
 	})
+Tab:CreateToggle({
+		Name = "Delete MuzzleFlash (7+)",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/delete4",
+		Callback = function(Value)
+			MuzzleFlash = Value
+		end,
+	})
 if getidentity() >= 7 then
 local cc = require(game:GetService("Players").LocalPlayer.PlayerScripts.Modules.ClientReplicatedClasses.ClientFighter.ClientItem.ClientViewModel)
 
@@ -275,7 +284,13 @@ local old = cc.ApplyRecoil;cc.ApplyRecoil = function(...)
 		return old(...)
 	end
 end
-
+local old = cc.MuzzleFlash;cc.MuzzleFlash = function(...)
+	if MuzzleFlash then
+		return
+	else	
+		return old(...)
+	end
+end
 end
 Tab:CreateToggle({
 		Name = "Auto Hop Server",
