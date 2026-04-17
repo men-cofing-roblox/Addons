@@ -12,63 +12,6 @@ local function findStringInTable(tbl, search)
     end
     return false
 end
-local function getplayerloadout(player)
-    local hasit = ""
-    local itemsleft = {}
-    if player == game:GetService("Players").LocalPlayer then
-        hasit = string.split(workspace.ViewModels.FirstPerson:GetChildren()[1].Name," - ")[2]
-    else
-        for _,v in pairs(workspace.ViewModels:GetChildren()) do
-            local split = string.split(v.Name," - ")
-            if split[1] == player.Name then
-                hasit = split[2]
-                break
-            end
-        end
-    end
-    for _,v in pairs(game:GetService("ReplicatedStorage").Assets.Temp.ViewModels:GetChildren()) do
-        local split = string.split(v.Name," - ")
-        if split[1] == player.Name then
-            table.insert(itemsleft,split[2])
-        end
-    end
-    return {has=hasit,left=itemsleft}
-end
-local function getplayerloadout(player)
-    local hasit = ""
-    local itemsleft = {}
-    if player == game:GetService("Players").LocalPlayer then
-        hasit = string.split(workspace.ViewModels.FirstPerson:GetChildren()[1].Name," - ")[2]
-    else
-        for _,v in pairs(workspace.ViewModels:GetChildren()) do
-            local split = string.split(v.Name," - ")
-            if split[1] == player.Name then
-                hasit = split[2]
-                break
-            end
-        end
-    end
-    for _,v in pairs(game:GetService("ReplicatedStorage").Assets.Temp.ViewModels:GetChildren()) do
-        local split = string.split(v.Name," - ")
-        if split[1] == player.Name then
-            table.insert(itemsleft,split[2])
-        end
-    end
-    return {has=hasit,left=itemsleft}
-end
-local function isneedtobefront(player)
-    local loadout = getplayerloadout(player)
-    local ishasriot = false
-    local ishasonkatana = loadout.has == "Katana"
-    local ishasonriot = loadout.has == "Riot Shield"
-    for i,v in loadout.left do
-		if v == "Riot Shield" then
-			ishasriot = true
-			break
-		end
-    end
-    return ishasriot or (ishasonkatana or not ishasonriot)
-end
 	local timer = 0
 	local timer2 = 0
 	local autocollect = false
@@ -278,7 +221,7 @@ Tab:CreateToggle({
 				for k, v in pairs(game:GetService("Players"):GetPlayers()) do
 					if v.UserId ~= game:GetService("Players").LocalPlayer.UserId and v:GetAttribute("EnvironmentID") and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health >= 1 and v:GetAttribute("SpectatingDuelObjectID") and game:GetService("Players").LocalPlayer:GetAttribute("SpectatingDuelObjectID") then
 						pcall(function()
-							game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(math.random(-obritrange, obritrange),math.random(-obritrange, obritrange),(isneedtobefront(v) and -obritrange or obritrange))
+							game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(math.random(-obritrange, obritrange),math.random(-obritrange, obritrange),obritrange)
 						end)
 						break
 					end
