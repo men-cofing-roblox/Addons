@@ -203,7 +203,6 @@ game:GetService("RunService").RenderStepped:Connect(function(dt)
 	end
 end)
 
-if getidentity() >= 7 then
 local deletetuff = {}
 	Tab:CreateDropdown({
    Name = "Delete ViewModel Thing (7+)",
@@ -215,6 +214,7 @@ local deletetuff = {}
 	deletetuff = Options
    end,
 })
+if getidentity() >= 7 then
 local cc = require(game:GetService("Players").LocalPlayer.PlayerScripts.Modules.ClientReplicatedClasses.ClientFighter.ClientItem.ClientViewModel)
 
 cc.PlayAnimation = function(p43, animName, ...)
