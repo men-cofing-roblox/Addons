@@ -6,7 +6,14 @@ local player = Players.LocalPlayer
 local function if_player_is_on_round_or_another(player)
 	return player:GetAttribute("EnvironmentID") ~= nil
 end
-
+local function findStringInTable(tbl, search)
+    for _, value in ipairs(tbl) do
+        if value == search then
+            return true
+        end
+    end
+    return false
+end
 local function chid_to_id(chid)
 	return string.byte(chid or string.char(0))
 end
@@ -195,6 +202,47 @@ game:GetService("RunService").RenderStepped:Connect(function(dt)
 		timer = 0
 	end
 end)
+
+if getidentity() >= 7 then
+local deletetuff = {}
+	Tab:CreateDropdown({
+   Name = "Delete ViewModel Thing (7+)",
+   Options = {"Shoot Anim","Reload Anim","Muzzle Flash","Recoil Anim"},
+   CurrentOption = {},
+   MultipleOptions = true,
+   Flag = tostring(game.PlaceId) .. "/deleteviewmodelfunc", 
+   Callback = function(Options)
+	deletetuff = Options
+   end,
+})
+local cc = require(game:GetService("Players").LocalPlayer.PlayerScripts.Modules.ClientReplicatedClasses.ClientFighter.ClientItem.ClientViewModel)
+
+cc.PlayAnimation = function(p43, animName, ...)
+	if string.find(animName,"Shoot") and findStringInTable(deletetuff,"Shoot Anim") then
+		return
+	end
+	if string.find(animName,"Reload") and findStringInTable(deletetuff,"Reload Anim") then
+		return
+	end
+	return p43.Animator:PlayAnimation(animName, ...)
+end
+local old = cc.ApplyRecoil;cc.ApplyRecoil = function(...)
+	if findStringInTable(deletetuff,"Recoil Anim") then
+		return
+	else	
+		return old(...)
+	end
+end
+
+local old = cc.MuzzleFlash;cc.MuzzleFlash = function(...)
+	if findStringInTable(deletetuff,"Muzzle Flash") then
+		return
+	else	
+		return old(...)
+	end
+end
+end
+
 Tab:CreateLabel("More features on FFA", "triangle-alert", Color3.fromRGB(100,100,0), true)
 	Tab:CreateButton({
    Name = "FFA Hop Server",
@@ -204,6 +252,7 @@ local success, response = pcall(function()
         game:HttpGet("https://games.roblox.com/v1/games/129604661913557/servers/Public?sortOrder=Asc&limit=100")
     )
 end)
+
 
 local availableServers = {}
 
