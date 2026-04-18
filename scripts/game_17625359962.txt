@@ -140,6 +140,33 @@ Tab:CreateSlider({
 	delaytptoplayers = Value
    end,
 })
+local infjump = false
+Tab:CreateToggle({
+		Name = "Inf Jump (7+)",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/jumpinf",
+		Callback = function(Value)
+			infjump = Value
+		end,
+	})
+if getidentity() >= 7 then
+local cc = require(game:GetService("Players").LocalPlayer.PlayerScripts.Controllers.MechanicsController)
+
+local old=cc.DoubleJumpRequest;cc.DoubleJumpRequest = function(p93)
+	if infjump then
+        local v94 = p93.LocalFighter and p93.LocalFighter.EquippedItem
+	if v94 then
+		v94 = p93.LocalFighter.EquippedItem:Get("ObjectID")
+	end
+	if v94 and not p93.LocalFighter:IsGrounded() then
+		p93:DoubleJump()
+	end
+    else
+        return old(p93)
+    end
+end
+
+end
 Tab:CreateToggle({
 		Name = "obrit v2",
 		CurrentValue = false,
