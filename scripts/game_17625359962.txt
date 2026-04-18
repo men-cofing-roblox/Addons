@@ -68,6 +68,7 @@ end
     local obrit = false
 	local obritrange = 10000000
     local animenabled = false
+    local animspeed = 1
 	local animtype = "Gangnam"
 	local function danceupdate(character)
 	local animations = {
@@ -101,6 +102,7 @@ end
 	animTrack.Priority = Enum.AnimationPriority.Action4
 	animTrack.Looped = true
 	animTrack:Play()
+    animTrack:AdjustSpeed(animspeed)
 	else
 		for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
 	if track.Priority == Enum.AnimationPriority.Action4 then
@@ -193,6 +195,18 @@ Tab:CreateToggle({
    Callback = function(Options)
 	animtype = Options[1]
 	danceupdate(game:GetService("Players").LocalPlayer.Character)
+   end,
+})
+Tab:CreateSlider({
+   Name = "dance speed",
+   Range = {0.25, 20},
+   Increment = 0.25,
+   Suffix = "",
+   CurrentValue = 1,
+   Flag = tostring(game.PlaceId) .. "/dancespeed",
+   Callback = function(Value)
+	animspeed = Value
+    danceupdate(game:GetService("Players").LocalPlayer.Character)
    end,
 })
 game:GetService("RunService").RenderStepped:Connect(function(dt)
