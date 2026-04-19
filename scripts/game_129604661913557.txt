@@ -191,6 +191,7 @@ Tab:CreateButton({
    end,
 })
 local infjump = false
+local jumpDoubleBoost = 1
 Tab:CreateToggle({
 		Name = "Inf Jump (7+)",
 		CurrentValue = false,
@@ -199,6 +200,17 @@ Tab:CreateToggle({
 			infjump = Value
 		end,
 	})
+Tab:CreateSlider({
+   Name = "jump Double Boost",
+   Range = {0.1, 10},
+   Increment = 0.1,
+   Suffix = "",
+   CurrentValue = 1,
+   Flag = tostring(game.PlaceId) .. "/jumpdoubleboost",
+   Callback = function(Value)
+	jumpDoubleBoost = Value
+   end,
+})
 if getidentity() >= 7 then
 local cc = require(game:GetService("Players").LocalPlayer.PlayerScripts.Controllers.MechanicsController)
 
@@ -215,7 +227,17 @@ local old=cc.DoubleJumpRequest;cc.DoubleJumpRequest = function(p93)
         return old(p93)
     end
 end
-
+cc.DoubleJump = function(p87)
+	if p87:IsAlive() and not p87:IsFrozen() then
+		local v88 = p87.LocalFighter:GetMoveVector(true, true)
+		local v89 = p87.LocalFighter.Entity.RootPart
+		local v90 = v88 * p87.LocalFighter.Entity.Humanoid.WalkSpeed * 1
+		local v91 = (p87.LocalFighter.Entity.Humanoid.JumpPower * 1.1) * (infjump and jumpDoubleBoost or 1)
+		v89.Velocity = v90 + Vector3.new(0, v91, 0)
+		p87.LocalFighter.Entity:InstantlyRedirectCustomKnockback()
+		p87:PlayMechanicsSound("DoubleJump")
+	end
+end
 end
 Tab:CreateToggle({
 		Name = "obrit v2",
@@ -274,6 +296,7 @@ local ShootAnim = false
 local ReloadAnim = false
 local RecoilAnim = false
 local MuzzleFlash = false
+local Bobbing = false
 	Tab:CreateToggle({
 		Name = "Delete ShootAnim (7+)",
 		CurrentValue = false,
@@ -306,6 +329,14 @@ Tab:CreateToggle({
 			MuzzleFlash = Value
 		end,
 	})
+Tab:CreateToggle({
+		Name = "Delete Bobbing (7+)",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/delete5",
+		Callback = function(Value)
+			Bobbing = Value
+		end,
+	})
 if getidentity() >= 7 then
 local cc = require(game:GetService("Players").LocalPlayer.PlayerScripts.Modules.ClientReplicatedClasses.ClientFighter.ClientItem.ClientViewModel)
 
@@ -331,6 +362,18 @@ local old = cc.MuzzleFlash;cc.MuzzleFlash = function(...)
 	else	
 		return old(...)
 	end
+end
+local old = cc.Update;cc.Update = function(p100, p101, p102, p103)
+	if Bobbing then
+	p100._sway_spring.Value = Vector2.zero
+p100._bobbing_value_spring.Value = Vector2.zero
+p100._tilt_spring.Value = Vector2.zero
+p100._jump_spring.Value = 0
+p100._landing_spring.Value = 0
+p100._recoil_spring.Value = Vector3.zero
+p100._unrecoil_spring.Value = Vector3.zero
+	end
+	return old(p100, p101, p102, p103)
 end
 end
 Tab:CreateToggle({
