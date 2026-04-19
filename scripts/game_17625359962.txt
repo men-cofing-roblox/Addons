@@ -142,7 +142,7 @@ Tab:CreateSlider({
 	delaytptoplayers = Value
    end,
 })
-local jumpDoubleBoost = 2
+local jumpDoubleBoost = 1
 local infjump = false
 Tab:CreateToggle({
 		Name = "Inf Jump (7+)",
