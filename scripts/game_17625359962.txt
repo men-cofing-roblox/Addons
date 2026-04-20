@@ -239,7 +239,7 @@ game:GetService("RunService").RenderStepped:Connect(function(dt)
 			for k, v in data do
 				if v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health >= 1 then
 					pcall(function()
-						game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(math.random(-obritrange, obritrange),math.random(-obritrange, obritrange),(isneedtobefront(v) and -obritrange or obritrange))
+						game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame * CFrame.new(math.random(-obritrange, obritrange),math.random(-obritrange, obritrange),(isneedtobefront(v) and -obritrange or obritrange))*CFrame.Angles(0, math.rad(isneedtobefront(v) and 0 or 180), 0)
 					end)
                     break
 				end
