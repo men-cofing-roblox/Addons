@@ -164,6 +164,19 @@ Tab:CreateToggle({
    end,
 })
 if getidentity() >= 7 then
+task.spawn(function()
+if not game:IsLoaded() then game.Loaded:Wait() end
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+if not player.PlayerGui:FindFirstChild("MainGui") then
+while not player.PlayerGui:FindFirstChild("LoadingScreen") do
+	task.wait()
+end
+while player.PlayerGui:FindFirstChild("LoadingScreen") do
+	task.wait(0.5)
+end
+end
+task.wait(1)
 local cc = require(game:GetService("Players").LocalPlayer.PlayerScripts.Controllers.MechanicsController)
 
 local old=cc.DoubleJumpRequest;cc.DoubleJumpRequest = function(p93)
@@ -191,7 +204,7 @@ cc.DoubleJump = function(p87)
 		p87:PlayMechanicsSound("DoubleJump")
 	end
 end
-
+end)
 end
 Tab:CreateToggle({
 		Name = "obrit v2.5",
@@ -314,6 +327,19 @@ Tab:CreateToggle({
 		end,
 	})
 if getidentity() >= 7 then
+task.spawn(function()
+if not game:IsLoaded() then game.Loaded:Wait() end
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+if not player.PlayerGui:FindFirstChild("MainGui") then
+while not player.PlayerGui:FindFirstChild("LoadingScreen") do
+	task.wait()
+end
+while player.PlayerGui:FindFirstChild("LoadingScreen") do
+	task.wait(0.5)
+end
+end
+task.wait(1)
 local cc = require(game:GetService("Players").LocalPlayer.PlayerScripts.Modules.ClientReplicatedClasses.ClientFighter.ClientItem.ClientViewModel)
 
 cc.PlayAnimation = function(p43, animName, ...)
@@ -351,6 +377,7 @@ p100._unrecoil_spring.Value = Vector3.zero
 	end
 	return old(p100, p101, p102, p103)
 end
+end)
 end
 
 Tab:CreateLabel("More features on FFA", "triangle-alert", Color3.fromRGB(100,100,0), true)
