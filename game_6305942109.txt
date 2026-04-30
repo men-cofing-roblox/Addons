@@ -1,0 +1,185 @@
+local addons = {}
+
+local function load(Tab)
+    function getbasketstatus(player)
+        return player.NonSaveVars.BasketStatus.Value
+    end
+    function getbasketcurrectpickamonit(player)
+        return player.NonSaveVars.BackpackAmount.Value
+    end
+    function getbasketmaxamonit(player)
+        return player.NonSaveVars.BasketSize.Value
+    end
+    function getifcangethot(plot)
+        for _,w in pairs(plot.WashingMachines:GetChildren()) do
+            if not w.Config.Started.Value and not w.Config.CycleFinished.Value then return true end
+        end
+        return false
+    end
+    function getbestcloth()
+        local data = {
+            ["None"] = 0,
+            ["Silver"] = 1,
+            ["Gold"] = 2,
+            ["Emerald"] = 3,
+            ["Rubie"] = 4,
+            ["Sapphire"] = 5
+        }
+        local best, SpecialTag = nil,-math.huge
+        for _,obj in pairs(workspace.Debris.Clothing:GetChildren()) do
+            local tag = obj:FindFirstChild("SpecialTag") and obj.SpecialTag.Value or "None"
+            if (data[tag] or -math.huge) > SpecialTag then
+                best = obj
+                SpecialTag = data[tag] or -math.huge
+            end
+        end
+        return best
+    end
+    local player = game:GetService("Players").LocalPlayer
+    local _1 = false
+    local _2 = false
+    local _3 = false
+    local _4 = false
+    local _5 = false
+    local _6 = false
+    local _7 = false
+    Tab:CreateToggle({
+		Name = "auto sell",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/autosell",
+		Callback = function(Value)
+			_1 = Value
+		end,
+	})
+    Tab:CreateToggle({
+		Name = "auto collect",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/autocollect",
+		Callback = function(Value)
+			_2 = Value
+		end,
+	})
+    Tab:CreateToggle({
+		Name = "auto pick done",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/autopickdone",
+		Callback = function(Value)
+			_3 = Value
+		end,
+	})
+    Tab:CreateToggle({
+		Name = "auto start",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/autostart",
+		Callback = function(Value)
+			_4 = Value
+		end,
+	})
+    Tab:CreateToggle({
+		Name = "anit in washing Machine",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/anitinwashingMachine",
+		Callback = function(Value)
+			_5 = Value
+		end,
+	})
+    Tab:CreateToggle({
+		Name = "hide on tp",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/hideontp",
+		Callback = function(Value)
+			_6 = Value
+		end,
+	})
+    Tab:CreateToggle({
+		Name = "anit die",
+		CurrentValue = false,
+		Flag = tostring(game.PlaceId) .. "/anitdie",
+		Callback = function(Value)
+			_7 = Value
+		end,
+	})
+    local plot = player:WaitForChild("NonSaveVars",math.huge):WaitForChild("OwnsPlot",math.huge)
+    while not plot.Value do
+        task.wait()
+    end
+    plot = plot.Value
+    task.spawn(function()
+        while task.wait() do
+            if getbasketstatus(player) == "Clean" and getbasketcurrectpickamonit(player) ~= 0 and _1 then
+                if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    player.Character.HumanoidRootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                    player.Character.HumanoidRootPart.CFrame = CFrame.new(-140, _6 and 5 or -20, -10)
+                end
+                game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("DropClothesInChute"):FireServer()
+            end
+        end
+    end)
+    task.spawn(function()
+        while task.wait(0.1) do 
+            if not _2 then continue end
+            if getbasketcurrectpickamonit(player) == getbasketmaxamonit(player) or not getifcangethot(plot) then continue end
+            local best = getbestcloth()
+            if not best then continue end
+            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                player.Character.HumanoidRootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                player.Character.HumanoidRootPart.CFrame = best.CFrame*CFrame.new(0,_6 and -7.5 or 0,0)
+            end
+            game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("GrabClothing"):FireServer(best)
+        end
+    end)
+    task.spawn(function()
+        local Waspimgs = plot:WaitForChild("WashingMachines",math.huge)
+        while task.wait(0.1) do
+            if not _3 then continue end
+            for _,w in pairs(Waspimgs:GetChildren()) do
+                if not w.Config.CycleFinished.Value then continue end
+                if getbasketcurrectpickamonit(player) == getbasketmaxamonit(player) then continue end
+                if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    player.Character.HumanoidRootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                    player.Character.HumanoidRootPart.CFrame = w.MAIN.CFrame*CFrame.new(0,_6 and -15 or 0,0)
+                end
+                game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("UnloadWashingMachine"):FireServer(w)
+                task.wait(0.1)
+            end
+        end
+    end)
+    task.spawn(function()
+        local Waspimgs = plot:WaitForChild("WashingMachines",math.huge)
+        while task.wait(0.1) do
+            if not _4 then continue end
+            if getbasketstatus(player) ~= "Dirty" or getbasketcurrectpickamonit(player) == 0 then continue end
+            for _,w in pairs(Waspimgs:GetChildren()) do
+                if w.Config.Started.Value then continue end
+                if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    player.Character.HumanoidRootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                    player.Character.HumanoidRootPart.CFrame = w.MAIN.CFrame*CFrame.new(0,_6 and -15 or 0,0)
+                end
+                game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("LoadWashingMachine"):FireServer(w)
+                task.wait(0.1)
+            end
+        end
+    end)
+    task.spawn(function()
+        local w = player.NonSaveVars.InWashingMachine
+        while task.wait() do
+            if w.Value and _5 then
+                game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("JumpOutOfMachine"):FireServer()
+            end
+        end
+    end)
+    task.spawn(function()
+        while task.wait() do
+            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and _7 then
+                if player.Character.HumanoidRootPart.CFrame.Position.Y <= -40 then
+                    player.Character.HumanoidRootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                    player.Character.HumanoidRootPart.CFrame = CFrame.new(player.Character.HumanoidRootPart.CFrame.Position.X,-40,player.Character.HumanoidRootPart.CFrame.Position.Z)
+                end
+            end
+        end
+    end)
+end
+
+addons.Load = load
+--return addons
+addons.Load(loadstring(game:HttpGet("https://raw.githubusercontent.com/men-cofing-roblox/Addons/refs/heads/main/TestScript.txt"))())
