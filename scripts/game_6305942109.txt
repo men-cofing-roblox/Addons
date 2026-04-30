@@ -18,7 +18,7 @@ local function load(Tab)
     end
     function getbestcloth()
         local data = {
-            ["None"] = 0,
+            ["None"] = -1,
             ["Silver"] = 1,
             ["Gold"] = 2,
             ["Emerald"] = 3,
@@ -28,9 +28,9 @@ local function load(Tab)
         local best, SpecialTag = nil,-math.huge
         for _,obj in pairs(workspace.Debris.Clothing:GetChildren()) do
             local tag = obj:FindFirstChild("SpecialTag") and obj.SpecialTag.Value or "None"
-            if (data[tag] or -math.huge) > SpecialTag then
+            if (data[tag] or 0) > SpecialTag then
                 best = obj
-                SpecialTag = data[tag] or -math.huge
+                SpecialTag = data[tag] or 0
             end
         end
         return best
