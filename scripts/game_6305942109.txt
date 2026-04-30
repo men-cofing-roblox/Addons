@@ -109,7 +109,7 @@ local function load(Tab)
             if getbasketstatus(player) == "Clean" and getbasketcurrectpickamonit(player) ~= 0 and _1 then
                 if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
                     player.Character.HumanoidRootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-                    player.Character.HumanoidRootPart.CFrame = CFrame.new(-140, _6 and 5 or -20, -10)
+                    player.Character.HumanoidRootPart.CFrame = CFrame.new(-140, _6 and -20 or 5, -10)
                 end
                 game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("DropClothesInChute"):FireServer()
             end
